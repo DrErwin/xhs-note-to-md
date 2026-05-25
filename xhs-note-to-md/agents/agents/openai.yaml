@@ -1,4 +1,0 @@
-interface:
-  display_name: "XHS Note to Markdown"
-  short_description: "Archive Xiaohongshu notes as Markdown."
-  default_prompt: "Turn this Xiaohongshu note into a Markdown document. Use xiaohongshu-skills for extraction, choose OCR only if needed, and save the output to my Desktop."
