@@ -39,10 +39,10 @@
 推荐 OCR 安装方式：
 
 ```powershell
-# 推荐：Windows 上优先使用
+# Windows：优先用微信 OCR
 python -m pip install wx-ocr
 
-# 备用：RapidOCR
+# 备用（Windows / macOS / Linux 通用）：RapidOCR
 python -m pip install rapidocr-onnxruntime
 
 # 备用：PaddleOCR
@@ -55,7 +55,7 @@ python -m pip install paddleocr
 python -m pip install --user wx-ocr
 ```
 
-一般建议先装 `wx-ocr`。如果识别失败，再尝试 `rapidocr_onnxruntime` 或 `paddleocr`。
+一般建议：Windows 先装 `wx-ocr`（macOS / Linux 没有 wx-ocr，直接用 `rapidocr_onnxruntime` 即可）。如果识别失败，再尝试其他引擎。
 
 相关安装页面：
 
@@ -69,35 +69,44 @@ python -m pip install --user wx-ocr
 
 ### 第 1 步：用一条 npx 命令安装 skill
 
-1. 按 `Win` 键，输入 `powershell`，回车，打开 PowerShell。
+1. 打开终端（**Windows**：按 `Win` 键输入 `powershell` 回车；**macOS**：按 `Command + 空格` 输入 `终端` 回车）。
 2. 粘贴下面这行并回车：
 
-   ```powershell
+   ```bash
    npx skills add DrErwin/xhs-note-to-md
    ```
 
 3. 在交互界面里：**勾选两个 skill** → **选择你的 Agent**（Codex / Claude Code / Cursor 等）→ **选择"全局"**。
-4. 看到 "Done!" 就装好了。你的电脑上会多出：
+4. 看到 "Done!" 就装好了。你的 skills 目录里会多出两个文件夹：
 
-   ```text
-   C:\Users\你的用户名\.codex\skills\
-     xhs-note-to-md\          ← 帖子转 Markdown
-     xiaohongshu-skills\      ← 小红书自动化（登录/搜索/抓取）
-   ```
+   | 系统 | skills 目录 |
+   |------|-------------|
+   | **Windows** | `C:\Users\你的用户名\.codex\skills\` |
+   | **macOS / Linux** | `~/.codex/skills/` |
 
-> 不确定 `你的用户名` 是什么？PowerShell 里运行 `echo $env:USERNAME` 就能看到。
+   里面应有：`xhs-note-to-md\`（帖子转 Markdown）和 `xiaohongshu-skills\`（小红书自动化）。
+
+> 不确定 `你的用户名` 是什么？Windows 运行 `echo $env:USERNAME`，macOS 运行 `echo $USER`。
 >
-> 不用 npx 的话，也可以把仓库 `skills/` 下的两个文件夹手动复制到上面的目录。
+> 不用 npx 的话，也可以把仓库 `skills/` 下的两个文件夹手动复制到上面你对应系统的目录。
 
 ### 第 2 步：找到浏览器插件文件夹（extension）
 
-插件文件夹**已经在你的电脑上了**，不用去网上找。在 PowerShell 里运行下面这行，会直接帮你打开它：
+插件文件夹**已经在你的电脑上了**，不用去网上找。在终端里运行下面这行，会直接帮你打开它：
+
+**Windows（PowerShell）：**
 
 ```powershell
 explorer "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills\extension"
 ```
 
-还没装 skill、想先拿插件？直接下载整个仓库压缩包：[点这里下载 ZIP](https://github.com/DrErwin/xhs-note-to-md/archive/refs/heads/main.zip)，解压后进入 `xhs-note-to-md-main\skills\xiaohongshu-skills\extension`。
+**macOS（终端）：**
+
+```bash
+open ~/.codex/skills/xiaohongshu-skills/extension
+```
+
+还没装 skill、想先拿插件？直接下载整个仓库压缩包：[点这里下载 ZIP](https://github.com/DrErwin/xhs-note-to-md/archive/refs/heads/main.zip)，解压后进入 `skills\xiaohongshu-skills\extension`（macOS 路径分隔符是 `/`）。
 
 ### 第 3 步：把插件装进 Chrome
 
@@ -108,12 +117,21 @@ explorer "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills\extension"
 
 ### 第 4 步：安装 Python 依赖
 
+**Windows（PowerShell）：**
+
 ```powershell
 cd "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills"
 python -m pip install python-socks requests websockets
 ```
 
-（需要 Python ≥ 3.11；用 [uv](https://docs.astral.sh/uv/) 的话运行 `uv sync` 也行。）
+**macOS（终端）：**
+
+```bash
+cd ~/.codex/skills/xiaohongshu-skills
+python3 -m pip install --user python-socks requests websockets
+```
+
+（需要 Python ≥ 3.11；macOS 若报 `externally-managed-environment` 错误，用 `brew install python` 后重试，或用 [uv](https://docs.astral.sh/uv/) 运行 `uv sync`。）
 
 ### 第 5 步：登录小红书
 

@@ -41,17 +41,17 @@
 推荐 OCR 安装方式：
 
 ```powershell
-# 推荐：Windows 上优先使用
+# Windows：优先用微信 OCR
 python -m pip install wx-ocr
 
-# 备用：RapidOCR
+# 备用（Windows / macOS / Linux 通用）：RapidOCR
 python -m pip install rapidocr-onnxruntime
 
 # 备用：PaddleOCR
 python -m pip install paddleocr
 ```
 
-一般建议先装 `wx-ocr`。如果识别失败，再尝试 `rapidocr_onnxruntime` 或 `paddleocr`。
+一般建议：Windows 先装 `wx-ocr`（macOS / Linux 没有 wx-ocr，直接用 `rapidocr_onnxruntime` 即可）。如果识别失败，再尝试其他引擎。
 
 相关安装页面：
 
@@ -68,10 +68,12 @@ python -m pip install paddleocr
 
 ### 第 1 步：用一条 npx 命令安装 skill
 
-1. 按键盘 `Win` 键，输入 `powershell`，回车，打开 PowerShell 窗口。
-2. 在窗口里粘贴这行命令并回车：
+1. 打开终端窗口：
+   - **Windows**：按 `Win` 键，输入 `powershell`，回车；
+   - **macOS**：按 `Command + 空格`，输入 `终端`（Terminal），回车。
+2. 在终端里粘贴这行命令并回车：
 
-   ```powershell
+   ```bash
    npx skills add DrErwin/xhs-note-to-md
    ```
 
@@ -81,36 +83,44 @@ python -m pip install paddleocr
    - **选择范围**：选"全局（Global）"，这样所有项目都能用。
 4. 看到"Done!"（或"Installed 2 skills"）就说明装好了。
 
-> **不想用 npx？手动复制也行**：把本仓库 `skills/` 下的 `xhs-note-to-md` 和 `xiaohongshu-skills` 两个文件夹，复制到 `C:\Users\你的用户名\.codex\skills\` 目录下。
+装完后，你的 skills 目录里会多出两个文件夹（这是后面几步要用到的）：
 
-装完后，你的电脑上会多出这两个文件夹（这是后面几步要用到的）：
+| 系统 | skills 目录 |
+|------|-------------|
+| **Windows** | `C:\Users\你的用户名\.codex\skills\` |
+| **macOS / Linux** | `~/.codex/skills/`（`~` 就是 `/Users/你的用户名`） |
+
+里面应该有：
 
 ```text
-C:\Users\你的用户名\.codex\skills\
-  xhs-note-to-md\          ← 帖子转 Markdown
-  xiaohongshu-skills\      ← 小红书自动化（登录/搜索/抓取）
+xhs-note-to-md/          ← 帖子转 Markdown
+xiaohongshu-skills/      ← 小红书自动化（登录/搜索/抓取）
 ```
 
-> 小知识：`你的用户名` 是你 Windows 登录账户的名字。不确定的话，在 PowerShell 里运行 `echo $env:USERNAME` 就能看到。
+> 小知识：`你的用户名` 是你的系统账户名。不确定的话，Windows 在 PowerShell 里运行 `echo $env:USERNAME`，macOS 在终端里运行 `echo $USER`。
+>
+> **不想用 npx？手动复制也行**：把本仓库 `skills/` 下的 `xhs-note-to-md` 和 `xiaohongshu-skills` 两个文件夹，复制到上面表格里你对应系统的 skills 目录下。
 
 ### 第 2 步：找到浏览器插件文件夹（extension）
 
-装完 skill 后，插件文件夹**已经在你的电脑上了**，不用再去网上找。它的位置是：
+装完 skill 后，插件文件夹**已经在你的电脑上了**，不用再去网上找。在终端里运行下面这行，会**直接帮你打开这个文件夹**：
 
-```text
-C:\Users\你的用户名\.codex\skills\xiaohongshu-skills\extension
-```
-
-嫌手动找麻烦？在 PowerShell 里运行下面这行，它会**直接帮你打开这个文件夹**：
+**Windows（PowerShell）：**
 
 ```powershell
 explorer "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills\extension"
 ```
 
-**如果还没装 skill、想先拿到插件**，也可以直接下载：
+**macOS（终端）：**
 
-- 方法 A：下载整个仓库压缩包 → [点这里下载 ZIP](https://github.com/DrErwin/xhs-note-to-md/archive/refs/heads/main.zip)，解压后进入 `xhs-note-to-md-main\skills\xiaohongshu-skills\extension`
-- 方法 B：命令行 clone：`git clone https://github.com/DrErwin/xhs-note-to-md.git`，然后进入 `xhs-note-to-md\skills\xiaohongshu-skills\extension`
+```bash
+open ~/.codex/skills/xiaohongshu-skills/extension
+```
+
+**如果还没装 skill、想先拿到插件**，也可以直接下载（Windows / macOS 通用）：
+
+- 方法 A：下载整个仓库压缩包 → [点这里下载 ZIP](https://github.com/DrErwin/xhs-note-to-md/archive/refs/heads/main.zip)，解压后进入 `xhs-note-to-md-main\skills\xiaohongshu-skills\extension`（macOS 解压后的路径分隔符是 `/`，即 `xhs-note-to-md-main/skills/xiaohongshu-skills/extension`）
+- 方法 B：命令行 clone：`git clone https://github.com/DrErwin/xhs-note-to-md.git`，然后进入 `xhs-note-to-md/skills/xiaohongshu-skills/extension`
 
 ### 第 3 步：把插件装进 Chrome
 
@@ -124,15 +134,26 @@ explorer "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills\extension"
 
 ### 第 4 步：安装 Python 依赖
 
-1. 确认电脑上有 Python 3.11 或更高版本（没有的话先去 [python.org](https://www.python.org/downloads/) 下载安装，安装时勾选 **Add python.exe to PATH**）。
-2. 在 PowerShell 里运行：
+1. 确认电脑上有 Python 3.11 或更高版本：
+   - **Windows**：没有的话去 [python.org](https://www.python.org/downloads/) 下载安装，安装时勾选 **Add python.exe to PATH**；
+   - **macOS**：终端里运行 `python3 --version` 查看版本（macOS 自带 python3，或用 `brew install python` 安装新版本）。
+2. 安装依赖：
+
+   **Windows（PowerShell）：**
 
    ```powershell
    cd "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills"
    python -m pip install python-socks requests websockets
    ```
 
-   如果你用的是 [uv](https://docs.astral.sh/uv/)，也可以直接运行 `uv sync`。
+   **macOS（终端）：**
+
+   ```bash
+   cd ~/.codex/skills/xiaohongshu-skills
+   python3 -m pip install --user python-socks requests websockets
+   ```
+
+   > macOS 的 pip 如果报 `externally-managed-environment` 错误，用 `brew install python` 装一个新版 Python 后重试；或者直接使用 [uv](https://docs.astral.sh/uv/)（Windows / macOS 都可用）：在 `xiaohongshu-skills` 目录里运行 `uv sync`。
 
 ### 第 5 步：登录小红书
 
