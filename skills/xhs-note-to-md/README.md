@@ -75,9 +75,19 @@ python -m pip install --user wx-ocr
 
 安装完成后，重启 Codex。
 
-### 第二步：安装这个 skill
+### 第二步：安装这个 skill（二选一）
 
-把整个 `xhs-note-to-md` 文件夹复制到 Codex 的 skills 目录。
+#### 方式一：一行 npx 安装（推荐）
+
+```powershell
+npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex
+```
+
+`-g` 全局安装，`-a codex` 指定装进 Codex（可换 `claude-code`、`cursor` 等，或去掉 `-a` 交互选择）。
+
+#### 方式二：手动复制
+
+把仓库里 `skills/xhs-note-to-md` 整个文件夹复制到 Codex 的 skills 目录。
 
 Windows 默认位置是：
 

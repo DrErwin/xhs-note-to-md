@@ -1,5 +1,9 @@
 # xhs-note-to-md
 
+[![skills.sh](https://skills.sh/b/DrErwin/xhs-note-to-md)](https://skills.sh/b/DrErwin/xhs-note-to-md)
+
+> 一键安装：`npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex`
+
 ## 1. 简介
 
 `xhs-note-to-md` 用于把小红书帖子转换成 Markdown 文档。
@@ -67,9 +71,31 @@ python -m pip install paddleocr
 
 安装完成后，重启 Codex。
 
-### 第二步：安装这个 skill
+### 第二步：安装这个 skill（二选一）
 
-把整个 `xhs-note-to-md` 文件夹复制到 Codex 的 skills 目录。
+#### 方式一：一行 npx 安装（推荐）
+
+本仓库已接入 [skills.sh](https://skills.sh/) 生态（`npx skills` 官方 CLI），一条命令即可把 skill 全局安装进 Codex：
+
+```powershell
+npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex
+```
+
+想同时装进其他 agent（Claude Code、Cursor、Gemini CLI 等）就继续加 `-a` 参数：
+
+```powershell
+npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex -a claude-code -a cursor
+```
+
+参数说明：
+
+- `-g`：全局安装（不指定则只装到当前项目目录）
+- `-y`：跳过交互确认
+- `-a <agent>`：指定安装目标 agent（支持 [70+ 种 agent](https://github.com/vercel-labs/skills#supported-agents)，不指定时会让你交互选择）
+
+#### 方式二：手动复制
+
+把仓库里 `skills/xhs-note-to-md` 整个文件夹复制到 Codex 的 skills 目录。
 
 Windows 默认位置是：
 
@@ -92,7 +118,7 @@ C:\Users\你的用户名\.codex\skills\
 
 ### 第三步：重启 Codex
 
-复制完成后，重启 Codex，让它重新发现这个 skill。
+安装/复制完成后，重启 Codex，让它重新发现这个 skill。
 
 ### 第四步：确认能用
 
