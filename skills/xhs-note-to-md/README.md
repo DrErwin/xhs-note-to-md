@@ -63,74 +63,73 @@ python -m pip install --user wx-ocr
 - `rapidocr-onnxruntime`: https://pypi.org/project/rapidocr-onnxruntime/
 - `PaddleOCR`: https://www.paddleocr.ai/main/en/version3.x/installation.html
 
-## 5. 安装方式
+## 5. 安装方式（一步一步来）
 
-本仓库捆绑了两个 skill，一条 `npx` 命令即可全部装上：
+本仓库捆绑了两个 skill，装一次就都有了：`xhs-note-to-md`（本 skill）和 `xiaohongshu-skills`（小红书自动化依赖）。
 
-- `xhs-note-to-md` — 本 skill（小红书帖子转 Markdown）
-- `xiaohongshu-skills` — 小红书自动化依赖（登录 / 搜索 / 抓取，随仓库一起分发）
+### 第 1 步：用一条 npx 命令安装 skill
 
-### 方式一：一行 npx 安装（推荐）
+1. 按 `Win` 键，输入 `powershell`，回车，打开 PowerShell。
+2. 粘贴下面这行并回车：
+
+   ```powershell
+   npx skills add DrErwin/xhs-note-to-md
+   ```
+
+3. 在交互界面里：**勾选两个 skill** → **选择你的 Agent**（Codex / Claude Code / Cursor 等）→ **选择"全局"**。
+4. 看到 "Done!" 就装好了。你的电脑上会多出：
+
+   ```text
+   C:\Users\你的用户名\.codex\skills\
+     xhs-note-to-md\          ← 帖子转 Markdown
+     xiaohongshu-skills\      ← 小红书自动化（登录/搜索/抓取）
+   ```
+
+> 不确定 `你的用户名` 是什么？PowerShell 里运行 `echo $env:USERNAME` 就能看到。
+>
+> 不用 npx 的话，也可以把仓库 `skills/` 下的两个文件夹手动复制到上面的目录。
+
+### 第 2 步：找到浏览器插件文件夹（extension）
+
+插件文件夹**已经在你的电脑上了**，不用去网上找。在 PowerShell 里运行下面这行，会直接帮你打开它：
 
 ```powershell
-npx skills add DrErwin/xhs-note-to-md
+explorer "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills\extension"
 ```
 
-运行后进入交互式界面，按提示选择即可（不需要记参数）：
+还没装 skill、想先拿插件？直接下载整个仓库压缩包：[点这里下载 ZIP](https://github.com/DrErwin/xhs-note-to-md/archive/refs/heads/main.zip)，解压后进入 `xhs-note-to-md-main\skills\xiaohongshu-skills\extension`。
 
-1. **选择 skill**：勾选 `xhs-note-to-md` 和 `xiaohongshu-skills`（全选 = 一起安装）
-2. **选择 Agent**：Codex / Claude Code / Cursor 等，可多选
-3. **选择范围**：全局或仅当前项目
+### 第 3 步：把插件装进 Chrome
 
-跳过交互的完整写法（`-g` 全局、`-y` 跳过确认、`-a` 指定 agent、`-s` 指定 skill）：
+1. Chrome 地址栏输入 `chrome://extensions/` 回车。
+2. 打开右上角**"开发者模式"**。
+3. 点**"加载已解压的扩展程序"**，选择第 2 步的 **extension 文件夹**。
+4. 确认列表里出现 **XHS Bridge** 且开关已打开。
+
+### 第 4 步：安装 Python 依赖
 
 ```powershell
-npx skills add DrErwin/xhs-note-to-md -g -y -a codex -s xhs-note-to-md -s xiaohongshu-skills
+cd "C:\Users\$env:USERNAME\.codex\skills\xiaohongshu-skills"
+python -m pip install python-socks requests websockets
 ```
 
-### 方式二：手动复制（备选）
+（需要 Python ≥ 3.11；用 [uv](https://docs.astral.sh/uv/) 的话运行 `uv sync` 也行。）
 
-把仓库里 `skills/` 下的 `xhs-note-to-md` 和 `xiaohongshu-skills` 两个文件夹都复制到 agent 的 skills 目录。Codex 的 Windows 默认位置是：
+### 第 5 步：登录小红书
 
-```text
-C:\Users\你的用户名\.codex\skills\
-```
+用 Chrome 打开 [xiaohongshu.com](https://www.xiaohongshu.com) 并登录你的小红书账号。
 
-复制完成后，目录应该像这样：
+### 第 6 步：重启 Agent，验证能用
 
-```text
-C:\Users\你的用户名\.codex\skills\
-  xiaohongshu-skills\
-    SKILL.md
-    scripts\
-    extension\
-    skills\
-  xhs-note-to-md\
-    SKILL.md
-    README.md
-    scripts\
-    references\
-    agents\
-```
+1. 重启你的 Agent（Codex / Claude Code 等）。
+2. 输入：
 
-### 第三步：装完后的配置（一次性）
+   ```text
+   把这个小红书帖子变成文档，只要文字：
+   [小红书链接或分享文案]
+   ```
 
-`xiaohongshu-skills` 还需要配置运行环境（Python 依赖 + Chrome 扩展桥接 + 登录），详见它自己目录里的 README（`~\.codex\skills\xiaohongshu-skills\README.md`）。
-
-### 第三步：重启 Codex
-
-复制完成后，重启 Codex，让它重新发现这个 skill。
-
-### 第四步：确认能用
-
-在 Codex 里输入：
-
-```text
-把这个小红书帖子变成文档，只要文字：
-[小红书链接或分享文案]
-```
-
-如果小红书账号已登录，skill 会自动开始处理。
+3. 如果提示未登录，让 Agent 执行 skill 的登录流程即可。
 
 ## 6. 快速开始
 
