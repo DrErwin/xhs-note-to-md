@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/DrErwin/xhs-note-to-md)](https://skills.sh/b/DrErwin/xhs-note-to-md)
 
-> 一键安装：`npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex`
+> 一键安装：`npx skills add DrErwin/xhs-note-to-md`（交互式选择 Agent 和 skill）
 
 ## 1. 简介
 
@@ -33,8 +33,8 @@
 
 使用前需要准备：
 
-- [ ] 在[autoclaw-cc/xiaohongshu-skills: xiaohongshu-skills](https://github.com/autoclaw-cc/xiaohongshu-skills)安装 `xiaohongshu-skills`
-- [ ] 小红书浏览器插件桥接已配置
+- [ ] `xiaohongshu-skills` 已安装（已随本仓库捆绑，安装本 skill 时一起装即可，见[第 5 节](#5-安装方式)）
+- [ ] 小红书浏览器插件桥接已配置（Chrome 加载 `extension/` 目录）
 - [ ] 小红书账号已登录
 - [ ] 如需识别图片文字，至少安装一个 OCR 引擎
 
@@ -61,43 +61,35 @@ python -m pip install paddleocr
 
 ## 5. 安装方式
 
-### 第一步：安装小红书基础 skill
+本仓库捆绑了两个 skill，一条 `npx` 命令即可全部装上：
 
-在 Codex 里输入：
+- **`xhs-note-to-md`** — 小红书帖子转 Markdown（本仓库）
+- **`xiaohongshu-skills`** — 小红书自动化依赖（登录 / 搜索 / 抓取，来自 [autoclaw-cc/xiaohongshu-skills](https://github.com/autoclaw-cc/xiaohongshu-skills)，MIT，见 [VENDOR-NOTICE](skills/xiaohongshu-skills/VENDOR-NOTICE.md)）
 
-```text
-安装 github.com/autoclaw-cc/xiaohongshu-skills
-```
+### 方式一：一行 npx 安装（推荐）
 
-安装完成后，重启 Codex。
-
-### 第二步：安装这个 skill（二选一）
-
-#### 方式一：一行 npx 安装（推荐）
-
-本仓库已接入 [skills.sh](https://skills.sh/) 生态（`npx skills` 官方 CLI），一条命令即可把 skill 全局安装进 Codex：
+本仓库已接入 [skills.sh](https://skills.sh/) 生态（`npx skills` 官方 CLI），运行：
 
 ```powershell
-npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex
+npx skills add DrErwin/xhs-note-to-md
 ```
 
-想同时装进其他 agent（Claude Code、Cursor、Gemini CLI 等）就继续加 `-a` 参数：
+命令会进入交互式界面，按提示选择即可，不需要记任何参数：
+
+1. **选择 skill**：勾选上面两个 skill（全选 = 一起安装）
+2. **选择 Agent**：Codex / Claude Code / Cursor / Gemini CLI 等 70+ 种，可多选
+3. **选择范围**：全局（所有项目可用）或仅当前项目
+
+想跳过交互、一次性指定全部参数也行（`-g` 全局、`-y` 跳过确认、`-a` 指定 agent、`-s` 指定 skill）：
 
 ```powershell
-npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex -a claude-code -a cursor
+# 两个 skill 一起全局装进 Codex
+npx skills add DrErwin/xhs-note-to-md -g -y -a codex -s xhs-note-to-md -s xiaohongshu-skills
 ```
 
-参数说明：
+### 方式二：手动复制（备选）
 
-- `-g`：全局安装（不指定则只装到当前项目目录）
-- `-y`：跳过交互确认
-- `-a <agent>`：指定安装目标 agent（支持 [70+ 种 agent](https://github.com/vercel-labs/skills#supported-agents)，不指定时会让你交互选择）
-
-#### 方式二：手动复制
-
-把仓库里 `skills/xhs-note-to-md` 整个文件夹复制到 Codex 的 skills 目录。
-
-Windows 默认位置是：
+把仓库里 `skills/` 下的 `xhs-note-to-md` 和 `xiaohongshu-skills` 两个文件夹都复制到 agent 的 skills 目录。Codex 的 Windows 默认位置是：
 
 ```text
 C:\Users\你的用户名\.codex\skills\
@@ -108,6 +100,10 @@ C:\Users\你的用户名\.codex\skills\
 ```text
 C:\Users\你的用户名\.codex\skills\
   xiaohongshu-skills\
+    SKILL.md
+    scripts\
+    extension\
+    skills\
   xhs-note-to-md\
     SKILL.md
     README.md
@@ -116,13 +112,27 @@ C:\Users\你的用户名\.codex\skills\
     agents\
 ```
 
-### 第三步：重启 Codex
+### 第三步：装完后的配置（一次性）
 
-安装/复制完成后，重启 Codex，让它重新发现这个 skill。
+skill 文件装好后，`xiaohongshu-skills` 还需要配置运行环境：
+
+1. **安装 Python 依赖**（Python ≥ 3.11）：
+
+   ```powershell
+   cd ~\.codex\skills\xiaohongshu-skills
+   python -m pip install python-socks requests websockets
+   # 或者用 uv：uv sync
+   ```
+
+2. **加载 Chrome 扩展桥接**：Chrome 打开 `chrome://extensions/` → 开启开发者模式 → 点"加载已解压的扩展程序" → 选择 `~\.codex\skills\xiaohongshu-skills\extension\` 目录，确认 **XHS Bridge** 扩展已启用。
+
+3. **登录小红书**：在 Chrome 里登录小红书，或让 agent 执行 skill 的登录流程。
+
+4. **重启 agent**（Codex / Claude Code 等），让它重新发现已安装的 skill。
 
 ### 第四步：确认能用
 
-在 Codex 里输入：
+在 agent 里输入：
 
 ```text
 把这个小红书帖子变成文档，只要文字：

@@ -11,7 +11,7 @@ Create a local Markdown document from a Xiaohongshu note. Use the installed `xia
 
 Verify dependencies before starting:
 
-- `xiaohongshu-skills`: default path `~/.codex/skills/xiaohongshu-skills`. If missing, ask the user to install `github.com/autoclaw-cc/xiaohongshu-skills` and restart Codex so the skill is discoverable.
+- `xiaohongshu-skills`: bundled in this repo at `skills/xiaohongshu-skills` and installed together with this skill via `npx skills add DrErwin/xhs-note-to-md` (select both skills). Default path `~/.codex/skills/xiaohongshu-skills`. If missing, ask the user to run `npx skills add DrErwin/xhs-note-to-md`, select both skills, and restart the agent so the skill is discoverable.
 - Browser extension bridge and Xiaohongshu login: run `python scripts/cli.py check-login` from the `xiaohongshu-skills` directory before detail extraction.
 - OCR is optional. If OCR is requested and the user does not specify an engine, prefer `wx-ocr` on Windows, then `rapidocr_onnxruntime`, then `paddleocr`. See `references/dependencies.md` for install and behavior notes.
 

@@ -65,31 +65,32 @@ python -m pip install --user wx-ocr
 
 ## 5. 安装方式
 
-### 第一步：安装小红书基础 skill
+本仓库捆绑了两个 skill，一条 `npx` 命令即可全部装上：
 
-在 Codex 里输入：
+- `xhs-note-to-md` — 本 skill（小红书帖子转 Markdown）
+- `xiaohongshu-skills` — 小红书自动化依赖（登录 / 搜索 / 抓取，随仓库一起分发）
 
-```text
-安装 github.com/autoclaw-cc/xiaohongshu-skills
-```
-
-安装完成后，重启 Codex。
-
-### 第二步：安装这个 skill（二选一）
-
-#### 方式一：一行 npx 安装（推荐）
+### 方式一：一行 npx 安装（推荐）
 
 ```powershell
-npx skills add DrErwin/xhs-note-to-md@xhs-note-to-md -g -y -a codex
+npx skills add DrErwin/xhs-note-to-md
 ```
 
-`-g` 全局安装，`-a codex` 指定装进 Codex（可换 `claude-code`、`cursor` 等，或去掉 `-a` 交互选择）。
+运行后进入交互式界面，按提示选择即可（不需要记参数）：
 
-#### 方式二：手动复制
+1. **选择 skill**：勾选 `xhs-note-to-md` 和 `xiaohongshu-skills`（全选 = 一起安装）
+2. **选择 Agent**：Codex / Claude Code / Cursor 等，可多选
+3. **选择范围**：全局或仅当前项目
 
-把仓库里 `skills/xhs-note-to-md` 整个文件夹复制到 Codex 的 skills 目录。
+跳过交互的完整写法（`-g` 全局、`-y` 跳过确认、`-a` 指定 agent、`-s` 指定 skill）：
 
-Windows 默认位置是：
+```powershell
+npx skills add DrErwin/xhs-note-to-md -g -y -a codex -s xhs-note-to-md -s xiaohongshu-skills
+```
+
+### 方式二：手动复制（备选）
+
+把仓库里 `skills/` 下的 `xhs-note-to-md` 和 `xiaohongshu-skills` 两个文件夹都复制到 agent 的 skills 目录。Codex 的 Windows 默认位置是：
 
 ```text
 C:\Users\你的用户名\.codex\skills\
@@ -100,6 +101,10 @@ C:\Users\你的用户名\.codex\skills\
 ```text
 C:\Users\你的用户名\.codex\skills\
   xiaohongshu-skills\
+    SKILL.md
+    scripts\
+    extension\
+    skills\
   xhs-note-to-md\
     SKILL.md
     README.md
@@ -107,6 +112,10 @@ C:\Users\你的用户名\.codex\skills\
     references\
     agents\
 ```
+
+### 第三步：装完后的配置（一次性）
+
+`xiaohongshu-skills` 还需要配置运行环境（Python 依赖 + Chrome 扩展桥接 + 登录），详见它自己目录里的 README（`~\.codex\skills\xiaohongshu-skills\README.md`）。
 
 ### 第三步：重启 Codex
 
